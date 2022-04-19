@@ -1,6 +1,18 @@
+
+
+
 import { useEffect, useState } from 'react';
-import { api } from '../services/api';
+
 import { MovieCard } from './MovieCard';
+
+import { api } from '../services/api';
+
+
+interface GenreResponseProps {
+  id: number;
+  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
+  title: string;
+}
 
 interface MovieProps {
   imdbID: string;
@@ -13,28 +25,33 @@ interface MovieProps {
   Runtime: string;
 }
 
+export function Content() {
+  const [selectedGenreId, setSelectedGenreId] = useState(1);
 
-interface GenreResponseProps {
-  id: number;
-  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
-  title: string;
-}
+  const [genres, setGenres] = useState<GenreResponseProps[]>([]);
 
-interface ContentProps {
-  selectedGenreId: number;
-  selectedGenre: GenreResponseProps;
-}
-
-
-export function Content({ selectedGenreId, selectedGenre }: ContentProps) {
   const [movies, setMovies] = useState<MovieProps[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState<GenreResponseProps>({} as GenreResponseProps);
 
+  useEffect(() => {
+    api.get<GenreResponseProps[]>('genres').then(response => {
+      setGenres(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
       setMovies(response.data);
     });
+
+    api.get<GenreResponseProps>(`genres/${selectedGenreId}`).then(response => {
+      setSelectedGenre(response.data);
+    })
   }, [selectedGenreId]);
+
+  function handleClickButton(id: number) {
+    setSelectedGenreId(id);
+  }
 
   return (
     <div className="container">

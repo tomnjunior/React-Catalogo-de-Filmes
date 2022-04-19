@@ -24,7 +24,7 @@ export function SideBar({ handleClickButton, selectedGenreId }: SideBarProps) {
       setGenres(response.data);
     });
   }, []);
-  
+
   return (
     <nav className="sidebar">
       <span>Watch<p>Me</p></span>

@@ -22,6 +22,7 @@ export function App() {
   const [selectedGenre, setSelectedGenre] = useState<GenreResponseProps>({} as GenreResponseProps);
 
   useEffect(() => {
+
     api.get<GenreResponseProps>(`genres/${selectedGenreId}`).then(response => {
       setSelectedGenre(response.data);
     })
@@ -33,7 +34,7 @@ export function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <SideBar selectedGenreId={selectedGenreId} handleClickButton={handleClickButton} />
+      <SideBar />
       <Content selectedGenre={selectedGenre} selectedGenreId={selectedGenreId} />
     </div>
   )
